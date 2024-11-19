@@ -4,8 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class PessoaUsuarioDTO {
+public class PessoaUsuarioRequestDTO {
     private String nome;
     private String email;
     private String senha;

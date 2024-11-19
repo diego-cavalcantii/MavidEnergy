@@ -1,9 +1,6 @@
 package br.com.mavidenergy.domains;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +15,14 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "VARCHAR(36)")
     private String usuarioId;
 
     private String email;
     private String senha;
+
+    @OneToOne
+    @JoinColumn(name = "pessoaId")
+    private Pessoa pessoaId;
 
 }
