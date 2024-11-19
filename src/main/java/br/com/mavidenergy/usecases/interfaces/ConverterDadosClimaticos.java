@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public interface BuscarDadosClimaticos {
-    Map<String, Object> buscarPorCidade(Cidade cidade);
+public interface ConverterDadosClimaticos {
+    DadosClimaticosResponseDTO converter(Map<String, Object> dadosClimaticos, Cidade cidade);
 }
