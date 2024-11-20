@@ -2,6 +2,8 @@ package br.com.mavidenergy.gateways.controllers;
 
 import br.com.mavidenergy.domains.Pessoa;
 import br.com.mavidenergy.gateways.requests.PessoaUsuarioRequestDTO;
+import br.com.mavidenergy.gateways.responses.PessoaResponseDTO;
+import br.com.mavidenergy.usecases.impl.ConverterPessoaEmDTO;
 import br.com.mavidenergy.usecases.interfaces.AdicionarPessoaComUsuario;
 import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class PessoaController {
 
     private final AdicionarPessoaComUsuario adicionarPessoaComUsuario;
     private final BuscarPessoa buscarPessoa;
+    private final ConverterPessoaEmDTO converterPessoaEmDTO;
 
     @GetMapping
     public ResponseEntity<String> testeApi() {
@@ -26,21 +29,26 @@ public class PessoaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pessoa> retornaPessoaComUsuario(@PathVariable String id) {
+    public ResponseEntity<PessoaResponseDTO> retornaPessoaComUsuario(@PathVariable String id) {
         Pessoa pessoa = buscarPessoa.buscarPorId(id);
-        return ResponseEntity.ok(pessoa);
+
+        PessoaResponseDTO pessoaResponseDTO = converterPessoaEmDTO.executa(pessoa);
+
+        return ResponseEntity.ok(pessoaResponseDTO);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<Pessoa> criaPessoaComUsuario(@RequestBody PessoaUsuarioRequestDTO pessoa) {
+    public ResponseEntity<PessoaResponseDTO> criaPessoaComUsuario(@RequestBody PessoaUsuarioRequestDTO pessoa) {
 
         Pessoa novaPessoa = adicionarPessoaComUsuario.executa(pessoa);
+
+        PessoaResponseDTO pessoaResponseDTO = converterPessoaEmDTO.executa(novaPessoa);
 
         Link link = linkTo(PessoaController.class).slash(novaPessoa.getPessoaId()).withSelfRel();
 
         novaPessoa.add(link);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(novaPessoa);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pessoaResponseDTO);
     }
 }

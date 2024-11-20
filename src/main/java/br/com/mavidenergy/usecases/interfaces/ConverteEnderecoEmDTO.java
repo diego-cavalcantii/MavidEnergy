@@ -5,6 +5,7 @@ import br.com.mavidenergy.gateways.responses.EnderecoResponseDTO;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface ConverteEnderecoDTO {
+public interface ConverteEnderecoEmDTO {
     EnderecoResponseDTO executa(Endereco endereco);
 }
+

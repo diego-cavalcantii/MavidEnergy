@@ -6,20 +6,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Usuario {
-
+@Entity
+public class Consulta {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "VARCHAR(36)")
-    private String usuarioId;
+    private String consultaId;
 
-    private String email;
-    private String senha;
+    private String bandeira;
+    private Double valorKwh;
 
+    @ManyToOne
+    private Pessoa pessoa;
 
+    @OneToOne
+    private Endereco endereco;
 }

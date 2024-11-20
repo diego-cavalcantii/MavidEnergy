@@ -22,8 +22,9 @@ public class Pessoa extends RepresentationModel<Pessoa> {
 
     private String nome;
 
-    @OneToOne(mappedBy = "pessoaId", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private Usuario usuario;
+
 
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
     private List<Endereco> enderecos;

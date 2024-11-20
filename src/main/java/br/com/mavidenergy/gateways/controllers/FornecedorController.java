@@ -4,9 +4,12 @@ import br.com.mavidenergy.domains.Endereco;
 import br.com.mavidenergy.domains.Fornecedor;
 import br.com.mavidenergy.gateways.repositories.FornecedorRepository;
 import br.com.mavidenergy.gateways.responses.EnderecoResponseDTO;
+import br.com.mavidenergy.gateways.responses.FornecedorPaginadoResponseDTO;
 import br.com.mavidenergy.gateways.responses.FornecedorResponseDTO;
 import br.com.mavidenergy.usecases.interfaces.BuscarFornecedor;
+import br.com.mavidenergy.usecases.interfaces.ConverteEnderecoEmDTO;
 import br.com.mavidenergy.usecases.interfaces.ConverteFornecedorEmDTO;
+import br.com.mavidenergy.usecases.interfaces.ConverteFornecedorPaginadoEmDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,16 +33,20 @@ public class FornecedorController {
 
     @GetMapping
     public ResponseEntity<List<FornecedorResponseDTO>> buscarTodosOsFornecedores() {
-
+        // Busca fornecedores
         List<Fornecedor> fornecedores = buscarFornecedor.buscarFornecedores();
 
-        List<FornecedorResponseDTO> fornecedorResponseDTOS = converteFornecedorEmDTO.executa(fornecedores);
+        // Converte fornecedores para DTOs usando o use case
+        List<FornecedorResponseDTO> fornecedorResponseDTOS = fornecedores.stream()
+                .map(converteFornecedorEmDTO::executa) // Usa o use case de conversão de fornecedor
+                .toList();
 
         return ResponseEntity.ok(fornecedorResponseDTOS);
     }
 
+
     @GetMapping("/proximos")
-    public ResponseEntity<Page<FornecedorResponseDTO>> buscarFornecedoresProximos(
+    public ResponseEntity<Page<FornecedorPaginadoResponseDTO>> buscarFornecedoresProximos(
             @RequestParam Double latitude,
             @RequestParam Double longitude,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
@@ -48,7 +55,7 @@ public class FornecedorController {
         List<Fornecedor> fornecedores = fornecedorRepository.buscarTodosComEndereco();
 
         // Aplica a lógica de proximidade, ordenação e paginação
-        Page<FornecedorResponseDTO> fornecedoresPaginados = buscarFornecedor.buscarFornecedorMaisProximo(latitude, longitude, fornecedores, pageable);
+        Page<FornecedorPaginadoResponseDTO> fornecedoresPaginados = buscarFornecedor.buscarFornecedorMaisProximo(latitude, longitude, fornecedores, pageable);
 
         return ResponseEntity.ok(fornecedoresPaginados);
     }

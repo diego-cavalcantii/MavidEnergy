@@ -32,6 +32,8 @@ public class AdicionarEnderecoImpl implements AdicionarEndereco {
                 .cep(enderecoRequestDTO.getCep())
                 .logradouro(enderecoRequestDTO.getLogradouro())
                 .numero(enderecoRequestDTO.getNumero())
+                .latitude(enderecoRequestDTO.getLatitude())
+                .longitude(enderecoRequestDTO.getLongitude())
                 .cidade(cidade)
                 .pessoa(pessoa)
                 .build();
@@ -45,6 +47,8 @@ public class AdicionarEnderecoImpl implements AdicionarEndereco {
                 .nomeCidade(novoEndereco.getCidade().getNomeCidade())
                 .nomeEstado(novoEndereco.getCidade().getNomeEstado())
                 .siglaEstado(novoEndereco.getCidade().getSiglaEstado())
+                .latitude(Double.valueOf(novoEndereco.getLatitude()))
+                .longitude(Double.valueOf(novoEndereco.getLongitude()))
                 .build();
 
         return enderecoResponseDTO;

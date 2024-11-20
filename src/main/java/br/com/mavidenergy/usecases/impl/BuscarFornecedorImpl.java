@@ -1,12 +1,10 @@
 package br.com.mavidenergy.usecases.impl;
 
-import br.com.mavidenergy.domains.Endereco;
 import br.com.mavidenergy.domains.Fornecedor;
 import br.com.mavidenergy.gateways.repositories.FornecedorRepository;
-import br.com.mavidenergy.gateways.responses.EnderecoResponseDTO;
-import br.com.mavidenergy.gateways.responses.FornecedorResponseDTO;
+import br.com.mavidenergy.gateways.responses.FornecedorPaginadoResponseDTO;
 import br.com.mavidenergy.usecases.interfaces.BuscarFornecedor;
-import br.com.mavidenergy.usecases.interfaces.CalcularDistanciaLatELong;
+import br.com.mavidenergy.usecases.interfaces.ConverteFornecedorPaginadoEmDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +19,8 @@ import java.util.stream.Collectors;
 public class BuscarFornecedorImpl implements BuscarFornecedor {
 
     private final FornecedorRepository fornecedorRepository;
-    private final CalcularDistanciaLatELong calcularDistanciaLatELong;
     private final PaginarResultados paginarResultados;
-    private final ConverteFornecedorEmDTOImpl converteFornecedorEmDTO;
+    private final ConverteFornecedorPaginadoEmDTO converteFornecedorPaginadoEmDTO;
 
 
     @Override
@@ -32,49 +29,18 @@ public class BuscarFornecedorImpl implements BuscarFornecedor {
     }
 
     @Override
-    public Page<FornecedorResponseDTO> buscarFornecedorMaisProximo(Double latitude, Double longitude, List<Fornecedor> fornecedores, Pageable pageable) {
-        // Calcular distância e mapear para DTO
-        List<FornecedorResponseDTO> fornecedorResponseDTOS = fornecedores.stream()
-                .map(fornecedor -> {
-                    Endereco endereco = fornecedor.getEndereco();
-                    EnderecoResponseDTO enderecoDTO = null;
-                    Double distancia = null;
-
-                    if (endereco != null) {
-                        distancia = calcularDistanciaLatELong.calcularDistancia(
-                                latitude,
-                                longitude,
-                                Double.valueOf(endereco.getLatitude()),
-                                Double.valueOf(endereco.getLongitude()));
-
-                        enderecoDTO = EnderecoResponseDTO.builder()
-                                .cep(endereco.getCep())
-                                .numero(endereco.getNumero())
-                                .logradouro(endereco.getLogradouro())
-                                .siglaEstado(endereco.getCidade() != null ? endereco.getCidade().getSiglaEstado() : null)
-                                .nomeEstado(endereco.getCidade() != null ? endereco.getCidade().getNomeEstado() : null)
-                                .nomeCidade(endereco.getCidade() != null ? endereco.getCidade().getNomeCidade() : null)
-                                .latitude(Double.valueOf(endereco.getLatitude()))
-                                .longitude(Double.valueOf(endereco.getLongitude()))
-                                .build();
-                    }
-
-                    return FornecedorResponseDTO.builder()
-                            .nomeFornecedor(fornecedor.getNomeFornecedor())
-                            .cnpj(fornecedor.getCnpj())
-                            .email(fornecedor.getEmail())
-                            .telefone(fornecedor.getTelefone())
-                            .endereco(enderecoDTO)
-                            .distancia(distancia)
-                            .build();
-                })
+    public Page<FornecedorPaginadoResponseDTO> buscarFornecedorMaisProximo(Double latitude, Double longitude, List<Fornecedor> fornecedores, Pageable pageable) {
+        // Utilizar o use case para converter fornecedores
+        List<FornecedorPaginadoResponseDTO> fornecedorPaginadoResponseDTOS = fornecedores.stream()
+                .map(fornecedor -> converteFornecedorPaginadoEmDTO.executa(fornecedor, latitude, longitude)) // Usar o use case
                 .filter(fornecedor -> fornecedor.getEndereco() != null) // Garante que o fornecedor tenha endereço
-                .sorted(Comparator.comparingDouble(FornecedorResponseDTO::getDistancia)) // Ordena pelo mais próximo
+                .sorted(Comparator.comparingDouble(FornecedorPaginadoResponseDTO::getDistancia)) // Ordena pelo mais próximo
                 .collect(Collectors.toList());
 
         // Paginar os resultados manualmente
-        return paginarResultados.paginarResultados(fornecedorResponseDTOS, pageable);
+        return paginarResultados.paginarResultados(fornecedorPaginadoResponseDTOS, pageable);
     }
+
 
 
 

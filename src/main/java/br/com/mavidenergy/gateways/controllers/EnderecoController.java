@@ -1,10 +1,14 @@
 package br.com.mavidenergy.gateways.controllers;
 
+import br.com.mavidenergy.domains.Endereco;
 import br.com.mavidenergy.domains.Pessoa;
+import br.com.mavidenergy.gateways.repositories.EnderecoRepository;
 import br.com.mavidenergy.gateways.requests.EnderecoRequestDTO;
 import br.com.mavidenergy.gateways.responses.EnderecoResponseDTO;
 import br.com.mavidenergy.usecases.interfaces.AdicionarEndereco;
+import br.com.mavidenergy.usecases.interfaces.BuscarEndereco;
 import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
+import br.com.mavidenergy.usecases.interfaces.ConverteEnderecoEmDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,9 @@ public class EnderecoController {
 
     private final AdicionarEndereco adicionarEndereco;
     private final BuscarPessoa buscarPessoa;
+    private final BuscarEndereco buscarEndereco;
+    private final ConverteEnderecoEmDTO converteEnderecoEmDTO;
+    private final EnderecoRepository enderecoRepository;
 
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -29,7 +36,16 @@ public class EnderecoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(enderecoResponseDTO);
     }
 
-    @GetMapping("/{pessoaId}")
+    @GetMapping("/{enderecoId}")
+    public ResponseEntity<EnderecoResponseDTO> buscarEnderecoPorId(@PathVariable String enderecoId) {
+        Endereco endereco = buscarEndereco.buscarPorId(enderecoId);
+
+        EnderecoResponseDTO enderecoResponseDTO = converteEnderecoEmDTO.executa(endereco);
+
+        return ResponseEntity.ok(enderecoResponseDTO);
+    }
+
+    @GetMapping("/pessoa/{pessoaId}")
     public ResponseEntity<List<EnderecoResponseDTO>> buscarEnderecoPorPessoa(@PathVariable String pessoaId) {
         Pessoa pessoa = buscarPessoa.buscarPorId(pessoaId);
 
@@ -46,6 +62,14 @@ public class EnderecoController {
 
         return ResponseEntity.ok(enderecos);
 
+    }
+    @DeleteMapping("/{enderecoId}")
+    public ResponseEntity<String> deletarEndereco(@PathVariable String enderecoId) {
+        Endereco endereco = buscarEndereco.buscarPorId(enderecoId);
+
+        enderecoRepository.delete(endereco);
+
+        return ResponseEntity.ok("Endereço deletado com sucesso");
     }
 
 
