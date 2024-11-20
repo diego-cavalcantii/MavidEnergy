@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
@@ -24,9 +26,16 @@ public class PessoaController {
     private final ConverterPessoaEmDTO converterPessoaEmDTO;
 
     @GetMapping
-    public ResponseEntity<String> testeApi() {
-        return ResponseEntity.ok("API funcionando");
+    public ResponseEntity<List<PessoaResponseDTO>> exibirTodasAsPessoasComUsuario() {
+        List<Pessoa> pessoas = buscarPessoa.buscarTodos();
+
+        List<PessoaResponseDTO> pessoasResponseDTO = pessoas.stream()
+                .map(converterPessoaEmDTO::executa)
+                .toList();
+
+        return ResponseEntity.ok(pessoasResponseDTO);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<PessoaResponseDTO> retornaPessoaComUsuario(@PathVariable String id) {
@@ -47,7 +56,7 @@ public class PessoaController {
 
         Link link = linkTo(PessoaController.class).slash(pessoaResponseDTO.getPessoaId()).withSelfRel();
 
-        pessoaResponseDTO.add(link);
+        pessoaResponseDTO   .add(link);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaResponseDTO);
     }

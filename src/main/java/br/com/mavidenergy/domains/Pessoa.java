@@ -26,4 +26,8 @@ public class Pessoa {
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
     private List<Endereco> enderecos;
 
+    // As consultas associadas a esta pessoa
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private List<Consulta> consultas;
+
 }

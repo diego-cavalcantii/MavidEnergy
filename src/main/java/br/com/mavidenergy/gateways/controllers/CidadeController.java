@@ -32,6 +32,7 @@ public class CidadeController {
 
         List<CidadeResponseDTO> cidadeResponseDTOS = cidades.stream().map(cidade ->
                 CidadeResponseDTO.builder()
+                        .cidadeId(cidade.getCidadeId())
                         .nomeCidade(cidade.getNomeCidade())
                         .nomeEstado(cidade.getNomeEstado())
                         .siglaEstado(cidade.getSiglaEstado())
