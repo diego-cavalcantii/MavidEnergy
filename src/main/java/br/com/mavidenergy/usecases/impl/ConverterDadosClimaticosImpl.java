@@ -18,7 +18,6 @@ public class ConverterDadosClimaticosImpl implements ConverterDadosClimaticos {
 
     private final ConverterTimesTampParaHora converterTimesTampParaHora;
     private final ConverteDirecaoVento converteDirecaoVento;
-    private final BuscarDadosClimaticos buscarDadosClimaticos;
 
     @Override
     public DadosClimaticosResponseDTO converter(Map<String, Object> dadosClimaticos, Cidade cidade) {

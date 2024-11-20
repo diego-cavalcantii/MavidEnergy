@@ -25,7 +25,13 @@ public class BuscarFornecedorImpl implements BuscarFornecedor {
 
     @Override
     public List<Fornecedor> buscarFornecedores() {
-        return fornecedorRepository.buscarTodosComEndereco();
+
+        List<Fornecedor> fornecedores = fornecedorRepository.findAll();
+        if (fornecedores.isEmpty()) {
+            throw new RuntimeException("Nenhum fornecedor encontrado");
+        }
+
+        return fornecedores;
     }
 
     @Override

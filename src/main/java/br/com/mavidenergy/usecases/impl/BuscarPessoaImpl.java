@@ -1,6 +1,7 @@
 package br.com.mavidenergy.usecases.impl;
 
 import br.com.mavidenergy.domains.Pessoa;
+import br.com.mavidenergy.gateways.exceptions.PessoaNotFoundException;
 import br.com.mavidenergy.gateways.repositories.PessoaRepository;
 import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class BuscarPessoaImpl implements BuscarPessoa {
     @Override
     public Pessoa buscarPorId(String id) {
         Pessoa pessoa = pessoaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+                .orElseThrow(() -> new PessoaNotFoundException("Pessoa com ID " + id + " não encontrada"));
 
         return pessoa;
     }

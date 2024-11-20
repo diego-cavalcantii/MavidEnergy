@@ -10,6 +10,7 @@ import br.com.mavidenergy.gateways.responses.EnderecoResponseDTO;
 import br.com.mavidenergy.usecases.interfaces.AdicionarEndereco;
 import br.com.mavidenergy.usecases.interfaces.BuscarCidade;
 import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
+import br.com.mavidenergy.usecases.interfaces.ConverteEnderecoEmDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class AdicionarEnderecoImpl implements AdicionarEndereco {
     private final EnderecoRepository enderecoRepository;
     private final BuscarCidade buscarCidade;
     private final BuscarPessoa buscarPessoa;
+    private final ConverteEnderecoEmDTO converteEnderecoEmDTO;
 
     @Override
     public EnderecoResponseDTO executa(EnderecoRequestDTO enderecoRequestDTO) {
@@ -40,16 +42,7 @@ public class AdicionarEnderecoImpl implements AdicionarEndereco {
 
         enderecoRepository.save(novoEndereco);
 
-        EnderecoResponseDTO enderecoResponseDTO = EnderecoResponseDTO.builder()
-                .cep(novoEndereco.getCep())
-                .logradouro(novoEndereco.getLogradouro())
-                .numero(novoEndereco.getNumero())
-                .nomeCidade(novoEndereco.getCidade().getNomeCidade())
-                .nomeEstado(novoEndereco.getCidade().getNomeEstado())
-                .siglaEstado(novoEndereco.getCidade().getSiglaEstado())
-                .latitude(Double.valueOf(novoEndereco.getLatitude()))
-                .longitude(Double.valueOf(novoEndereco.getLongitude()))
-                .build();
+        EnderecoResponseDTO enderecoResponseDTO = converteEnderecoEmDTO.executa(novoEndereco);
 
         return enderecoResponseDTO;
     }

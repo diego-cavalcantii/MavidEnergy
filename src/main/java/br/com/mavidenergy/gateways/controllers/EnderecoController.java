@@ -63,6 +63,7 @@ public class EnderecoController {
         return ResponseEntity.ok(enderecos);
 
     }
+
     @DeleteMapping("/{enderecoId}")
     public ResponseEntity<String> deletarEndereco(@PathVariable String enderecoId) {
         Endereco endereco = buscarEndereco.buscarPorId(enderecoId);

@@ -1,6 +1,7 @@
 package br.com.mavidenergy.usecases.impl;
 
 import br.com.mavidenergy.domains.Cidade;
+import br.com.mavidenergy.gateways.exceptions.CidadeNotFoundException;
 import br.com.mavidenergy.gateways.repositories.CidadeRepository;
 import br.com.mavidenergy.usecases.interfaces.BuscarCidade;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,19 @@ public class BuscarCidadeImpl implements BuscarCidade {
     @Override
     public Cidade buscarPorId(String id) {
         Cidade cidade = cidadeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cidade não encontrado"));
+                .orElseThrow(() -> new CidadeNotFoundException("Cidade com ID " + id + " não encontrada"));
 
         return cidade;
     }
 
     @Override
     public List<Cidade> buscarTodos() {
-        return cidadeRepository.findAll();
+        List<Cidade> cidades = cidadeRepository.findAll();
+
+        if (cidades.isEmpty()) {
+            throw new CidadeNotFoundException("Nenhuma cidade encontrada");
+        }
+
+        return cidades;
     }
 }
