@@ -10,11 +10,14 @@ import br.com.mavidenergy.usecases.interfaces.BuscarEndereco;
 import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
 import br.com.mavidenergy.usecases.interfaces.ConverteEnderecoEmDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping("/enderecos")

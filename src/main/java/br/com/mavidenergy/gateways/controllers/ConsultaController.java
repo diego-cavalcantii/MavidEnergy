@@ -3,20 +3,26 @@ package br.com.mavidenergy.gateways.controllers;
 import br.com.mavidenergy.domains.Consulta;
 import br.com.mavidenergy.domains.Endereco;
 import br.com.mavidenergy.domains.Pessoa;
+import br.com.mavidenergy.gateways.exceptions.ConsultaNotFoundException;
 import br.com.mavidenergy.gateways.repositories.ConsultaRepository;
 import br.com.mavidenergy.gateways.requests.ConsultaRequestDTO;
 import br.com.mavidenergy.gateways.responses.ConsultaResponseDTO;
 import br.com.mavidenergy.gateways.responses.EnderecoResponseDTO;
 import br.com.mavidenergy.usecases.impl.TarifaService;
+import br.com.mavidenergy.usecases.interfaces.BuscarConsulta;
 import br.com.mavidenergy.usecases.interfaces.BuscarEndereco;
 import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
 import br.com.mavidenergy.usecases.interfaces.ConverteEnderecoEmDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping("/consulta")
@@ -24,18 +30,54 @@ import java.util.Map;
 public class ConsultaController {
 
     private final BuscarEndereco buscarEndereco;
-    private final ConsultaRepository consultaRepository;
+    private final BuscarConsulta buscarConsulta;
     private final BuscarPessoa buscarPessoa;
     private final TarifaService tarifaService;
     private final ConverteEnderecoEmDTO converteEnderecoEmDTO;
+    private final ConsultaRepository consultaRepository;
 
-    @PostMapping("/teste")
-    public ResponseEntity<Endereco> testeApi(@RequestBody ConsultaRequestDTO consultaRequestDTO) {
-        Endereco endereco = buscarEndereco.buscarPorId(consultaRequestDTO.getEnderecoId());
 
-        return ResponseEntity.ok(endereco);
+    @GetMapping("/{consultaId}")
+    public ResponseEntity<ConsultaResponseDTO> exibiUmaConsulta(@PathVariable String consultaId){
+        Consulta consulta = buscarConsulta.buscarPorId(consultaId);
+
+        ConsultaResponseDTO consultaResponse = ConsultaResponseDTO.builder()
+                .bandeira(consulta.getBandeira())
+                .valorKwh(consulta.getValorKwh())
+                .endereco(converteEnderecoEmDTO.executa(consulta.getEndereco()))
+                .EconomiaPotencial(String.valueOf(consulta.getEconomiaPotencial()))
+                .ValorComDesconto(String.valueOf(consulta.getValorComDesconto()))
+                .ValorSemDesconto(String.valueOf(consulta.getValorSemDesconto()))
+                .dataCriacao(consulta.getDataCriacao())
+                .build();
+
+        return ResponseEntity.ok(consultaResponse);
     }
 
+
+    @GetMapping("/pessoa/{pessoaId}")
+    public ResponseEntity<List<ConsultaResponseDTO>> exibiTodasAsConsultasDeUmaPessoa(@PathVariable String pessoaId) {
+
+        Pessoa pessoa = buscarPessoa.buscarPorId(pessoaId);
+
+        List<Consulta> consultas = buscarConsulta.buscarPorPessoa(pessoa);
+
+        List<ConsultaResponseDTO> consultasResponse = consultas.stream()
+                .map(consulta -> ConsultaResponseDTO.builder()
+                        .bandeira(consulta.getBandeira())
+                        .valorKwh(consulta.getValorKwh())
+                        .endereco(converteEnderecoEmDTO.executa(consulta.getEndereco()))
+                        .EconomiaPotencial(String.valueOf(consulta.getEconomiaPotencial()))
+                        .ValorComDesconto(String.valueOf(consulta.getValorComDesconto()))
+                        .ValorSemDesconto(String.valueOf(consulta.getValorSemDesconto()))
+                        .dataCriacao(consulta.getDataCriacao())
+                        .build())
+                .toList();
+
+        return ResponseEntity.ok(consultasResponse);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ResponseEntity<ConsultaResponseDTO> gerarConsulta(@RequestBody ConsultaRequestDTO consultaRequestDTO) {
         // Define fixed values for calculations, adjust as necessary
@@ -50,6 +92,14 @@ public class ConsultaController {
             Endereco endereco = buscarEndereco.buscarPorId(consultaRequestDTO.getEnderecoId());
             if (endereco == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
+            List<Consulta> consultas = consultaRepository.findAll();
+
+            for (Consulta consulta : consultas) {
+                if (consulta.getEndereco().getEnderecoId().equals(consultaRequestDTO.getEnderecoId())) {
+                    throw new IllegalArgumentException("Endereço já possui uma consulta");
+                }
             }
 
             Pessoa pessoa = buscarPessoa.buscarPorId(consultaRequestDTO.getPessoaId());
@@ -90,9 +140,14 @@ public class ConsultaController {
                     .EconomiaPotencial(String.format("%.2f", valoresEconomia.get("economia")))
                     .ValorComDesconto(String.format("%.2f", valoresEconomia.get("valorComDesconto")))
                     .ValorSemDesconto(String.format("%.2f", (Double) tarifaResultados.get("valorSemDesconto")))
+                    .dataCriacao(consulta.getDataCriacao())
                     .build();
 
-            return ResponseEntity.ok(consultaResponse);
+            Link link = linkTo(ConsultaController.class).slash(consulta.getConsultaId()).withSelfRel();
+
+            consultaResponse.add(link);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(consultaResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception e) {

@@ -45,9 +45,9 @@ public class PessoaController {
 
         PessoaResponseDTO pessoaResponseDTO = converterPessoaEmDTO.executa(novaPessoa);
 
-        Link link = linkTo(PessoaController.class).slash(novaPessoa.getPessoaId()).withSelfRel();
+        Link link = linkTo(PessoaController.class).slash(pessoaResponseDTO.getPessoaId()).withSelfRel();
 
-        novaPessoa.add(link);
+        pessoaResponseDTO.add(link);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaResponseDTO);
     }

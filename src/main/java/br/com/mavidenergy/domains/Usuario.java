@@ -18,6 +18,7 @@ public class Usuario {
     @Column(columnDefinition = "VARCHAR(36)")
     private String usuarioId;
 
+    @Column(unique = true)
     private String email;
     private String senha;
 

@@ -1,9 +1,6 @@
 package br.com.mavidenergy.gateways.controllers;
 
-import br.com.mavidenergy.gateways.exceptions.CidadeNotFoundException;
-import br.com.mavidenergy.gateways.exceptions.EnderecoNotFoundException;
-import br.com.mavidenergy.gateways.exceptions.FornecedorNotFoundException;
-import br.com.mavidenergy.gateways.exceptions.PessoaNotFoundException;
+import br.com.mavidenergy.gateways.exceptions.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -27,6 +24,11 @@ public class ControllerAdvice {
 
     @ExceptionHandler(PessoaNotFoundException.class)
     public ResponseEntity<String> trataPessoaNotFoundException(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), org.springframework.http.HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ConsultaNotFoundException.class)
+    public ResponseEntity<String> trataConsultaNotFoundException(Exception e) {
         return new ResponseEntity<>(e.getMessage(), org.springframework.http.HttpStatus.NOT_FOUND);
     }
 
