@@ -12,4 +12,6 @@ public class EnderecoResponseDTO {
     private String nomeCidade;
     private String nomeEstado;
     private String siglaEstado;
+    private Double latitude;
+    private Double longitude;
 }

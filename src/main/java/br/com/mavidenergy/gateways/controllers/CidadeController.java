@@ -52,11 +52,16 @@ public class CidadeController {
 
 
     @GetMapping("/{cidadeId}")
-    public String buscarCidadePorId(@PathVariable  String cidadeId) {
+    public ResponseEntity<CidadeResponseDTO> buscarCidadePorId(@PathVariable  String cidadeId) {
         Cidade cidade = buscarCidade.buscarPorId(cidadeId);
 
-        String mensagem = cidade.getLongitude() + " " + cidade.getLatitude();
-        return mensagem;
+        CidadeResponseDTO cidadeResponseDTO = CidadeResponseDTO.builder()
+                .nomeCidade(cidade.getNomeCidade())
+                .nomeEstado(cidade.getNomeEstado())
+                .siglaEstado(cidade.getSiglaEstado())
+                .build();
+
+        return ResponseEntity.ok(cidadeResponseDTO);
     }
 
 }

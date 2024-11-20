@@ -21,11 +21,19 @@ public class Endereco {
     private String cep;
     private String logradouro;
     private String numero;
+    private String latitude;
+    private String longitude;
 
     @ManyToOne
+    @JoinColumn(name = "cidadeId")
     private Cidade cidade;
 
     @ManyToOne
     @JoinColumn(name = "pessoaId")
     private Pessoa pessoa;
+
+    @OneToOne
+    @JoinColumn(name = "fornecedorId")
+    private Fornecedor fornecedor;
+
 }
