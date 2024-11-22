@@ -13,6 +13,7 @@ import br.com.mavidenergy.usecases.interfaces.BuscarConsulta;
 import br.com.mavidenergy.usecases.interfaces.BuscarEndereco;
 import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
 import br.com.mavidenergy.usecases.interfaces.ConverteEnderecoEmDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -79,7 +80,7 @@ public class ConsultaController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<ConsultaResponseDTO> gerarConsulta(@RequestBody ConsultaRequestDTO consultaRequestDTO) {
+    public ResponseEntity<ConsultaResponseDTO> gerarConsulta(@Valid @RequestBody ConsultaRequestDTO consultaRequestDTO) {
         // Define fixed values for calculations, adjust as necessary
         double tarifa = 0.60; // R$/kWh
         double icms = 18; // percent
@@ -128,6 +129,9 @@ public class ConsultaController {
                     .valorKwh(consultaRequestDTO.getValorKwh())
                     .pessoa(pessoa)
                     .endereco(endereco)
+                    .ValorComDesconto(valoresEconomia.get("valorComDesconto"))
+                    .ValorSemDesconto((Double) tarifaResultados.get("valorSemDesconto"))
+                    .EconomiaPotencial(valoresEconomia.get("economia"))
                     .build();
             consultaRepository.save(consulta);
 

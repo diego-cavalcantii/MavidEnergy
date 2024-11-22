@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ConverteFornecedorEmDTO {
-    FornecedorResponseDTO executa(Fornecedor fornecedor);
+    FornecedorResponseDTO executa(Fornecedor fornecedor,Double latitude, Double longitude);
 }
 

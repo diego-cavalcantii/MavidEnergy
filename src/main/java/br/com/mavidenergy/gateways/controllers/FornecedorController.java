@@ -31,22 +31,23 @@ public class FornecedorController {
     private final FornecedorRepository fornecedorRepository;
     private final ConverteFornecedorEmDTO converteFornecedorEmDTO;
 
-    @GetMapping
-    public ResponseEntity<List<FornecedorResponseDTO>> buscarTodosOsFornecedores() {
+    @GetMapping("/proximos")
+    public ResponseEntity<List<FornecedorResponseDTO>> buscarTodosOsFornecedoresProximos(
+            @RequestParam Double latitude,
+            @RequestParam Double longitude
+    ) {
         // Busca fornecedores
         List<Fornecedor> fornecedores = buscarFornecedor.buscarFornecedores();
 
         // Converte fornecedores para DTOs usando o use case
-        List<FornecedorResponseDTO> fornecedorResponseDTOS = fornecedores.stream()
-                .map(converteFornecedorEmDTO::executa) // Usa o use case de conversão de fornecedor
-                .toList();
+        List<FornecedorResponseDTO> fornecedorResponseDTOS = buscarFornecedor.buscarFornecedorMaisProximo(latitude, longitude, fornecedores);
 
         return ResponseEntity.ok(fornecedorResponseDTOS);
     }
 
 
-    @GetMapping("/proximos")
-    public ResponseEntity<Page<FornecedorPaginadoResponseDTO>> buscarFornecedoresProximos(
+    @GetMapping("/proximos-paginado")
+    public ResponseEntity<Page<FornecedorPaginadoResponseDTO>> buscarFornecedoresProximosPaginados(
             @RequestParam Double latitude,
             @RequestParam Double longitude,
             @PageableDefault(page = 0, size = 10) Pageable pageable) {
@@ -55,7 +56,7 @@ public class FornecedorController {
         List<Fornecedor> fornecedores = fornecedorRepository.buscarTodosComEndereco();
 
         // Aplica a lógica de proximidade, ordenação e paginação
-        Page<FornecedorPaginadoResponseDTO> fornecedoresPaginados = buscarFornecedor.buscarFornecedorMaisProximo(latitude, longitude, fornecedores, pageable);
+        Page<FornecedorPaginadoResponseDTO> fornecedoresPaginados = buscarFornecedor.buscarFornecedorMaisProximoPaginado(latitude, longitude, fornecedores, pageable);
 
         return ResponseEntity.ok(fornecedoresPaginados);
     }

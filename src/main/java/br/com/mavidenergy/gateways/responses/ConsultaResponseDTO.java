@@ -12,12 +12,10 @@ import java.util.Date;
 @Builder
 public class ConsultaResponseDTO extends RepresentationModel<ConsultaResponseDTO> {
     private String bandeira;
-    private Double valorKwh;
+    private double valorKwh;
     private EnderecoResponseDTO endereco;
     private String EconomiaPotencial;
     private String ValorComDesconto;
     private String ValorSemDesconto;
     private LocalDateTime dataCriacao;
-
-
 }

@@ -11,4 +11,5 @@ public class FornecedorResponseDTO {
     private String telefone;
     private String email;
     private EnderecoResponseDTO endereco;
+    private Double distancia;
 }

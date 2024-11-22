@@ -54,6 +54,7 @@ public class EnderecoController {
 
         List<EnderecoResponseDTO> enderecos = pessoa.getEnderecos().stream().map(endereco ->
                 EnderecoResponseDTO.builder()
+                        .enderecoId(endereco.getEnderecoId())
                         .cep(endereco.getCep())
                         .logradouro(endereco.getLogradouro())
                         .numero(endereco.getNumero())

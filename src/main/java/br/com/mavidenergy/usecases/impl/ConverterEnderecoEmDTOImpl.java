@@ -14,6 +14,7 @@ public class ConverterEnderecoEmDTOImpl implements ConverteEnderecoEmDTO {
         }
 
         return EnderecoResponseDTO.builder()
+                .enderecoId(endereco.getEnderecoId())
                 .cep(endereco.getCep())
                 .numero(endereco.getNumero())
                 .logradouro(endereco.getLogradouro())
