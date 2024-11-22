@@ -1,14 +1,12 @@
 package br.com.mavidenergy.gateways.controllers;
 
+import br.com.mavidenergy.domains.Cidade;
 import br.com.mavidenergy.domains.Endereco;
 import br.com.mavidenergy.domains.Pessoa;
 import br.com.mavidenergy.gateways.repositories.EnderecoRepository;
 import br.com.mavidenergy.gateways.requests.EnderecoRequestDTO;
 import br.com.mavidenergy.gateways.responses.EnderecoResponseDTO;
-import br.com.mavidenergy.usecases.interfaces.AdicionarEndereco;
-import br.com.mavidenergy.usecases.interfaces.BuscarEndereco;
-import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
-import br.com.mavidenergy.usecases.interfaces.ConverteEnderecoEmDTO;
+import br.com.mavidenergy.usecases.interfaces.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -27,17 +25,12 @@ public class EnderecoController {
     private final AdicionarEndereco adicionarEndereco;
     private final BuscarPessoa buscarPessoa;
     private final BuscarEndereco buscarEndereco;
+    private final BuscarCidade buscarCidade;
     private final ConverteEnderecoEmDTO converteEnderecoEmDTO;
     private final EnderecoRepository enderecoRepository;
 
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public ResponseEntity<EnderecoResponseDTO> adicionarEndereco(@RequestBody EnderecoRequestDTO enderecoRequestDTO) {
-        EnderecoResponseDTO enderecoResponseDTO = adicionarEndereco.executa(enderecoRequestDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(enderecoResponseDTO);
-    }
 
     @GetMapping("/{enderecoId}")
     public ResponseEntity<EnderecoResponseDTO> buscarEnderecoPorId(@PathVariable String enderecoId) {
@@ -66,6 +59,36 @@ public class EnderecoController {
 
         return ResponseEntity.ok(enderecos);
 
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public ResponseEntity<EnderecoResponseDTO> adicionarEndereco(@RequestBody EnderecoRequestDTO enderecoRequestDTO) {
+        EnderecoResponseDTO enderecoResponseDTO = adicionarEndereco.executa(enderecoRequestDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(enderecoResponseDTO);
+    }
+
+    @PutMapping("/{enderecoId}")
+    public ResponseEntity<EnderecoResponseDTO> atualizarEndereco(@PathVariable String enderecoId, @RequestBody EnderecoRequestDTO enderecoRequestDTO) {
+        Endereco endereco = buscarEndereco.buscarPorId(enderecoId);
+
+        Cidade cidade = buscarCidade.buscarPorId(enderecoRequestDTO.getCidadeId());
+
+
+        endereco.setCep(enderecoRequestDTO.getCep());
+        endereco.setLogradouro(enderecoRequestDTO.getLogradouro());
+        endereco.setNumero(enderecoRequestDTO.getNumero());
+        endereco.setLatitude(enderecoRequestDTO.getLatitude());
+        endereco.setLongitude(enderecoRequestDTO.getLongitude());
+        endereco.setCidade(cidade);
+
+
+        enderecoRepository.save(endereco);
+
+        EnderecoResponseDTO enderecoResponseDTO = converteEnderecoEmDTO.executa(endereco);
+
+        return ResponseEntity.ok(enderecoResponseDTO);
     }
 
     @DeleteMapping("/{enderecoId}")
