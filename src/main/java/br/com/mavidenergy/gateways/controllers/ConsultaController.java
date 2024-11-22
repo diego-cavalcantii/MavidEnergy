@@ -2,9 +2,11 @@ package br.com.mavidenergy.gateways.controllers;
 
 import br.com.mavidenergy.domains.Consulta;
 import br.com.mavidenergy.domains.Endereco;
+import br.com.mavidenergy.domains.ErrorResponseDTO;
 import br.com.mavidenergy.domains.Pessoa;
 import br.com.mavidenergy.gateways.exceptions.ConsultaNotFoundException;
 import br.com.mavidenergy.gateways.repositories.ConsultaRepository;
+import br.com.mavidenergy.gateways.repositories.PessoaRepository;
 import br.com.mavidenergy.gateways.requests.ConsultaRequestDTO;
 import br.com.mavidenergy.gateways.responses.ConsultaResponseDTO;
 import br.com.mavidenergy.gateways.responses.EnderecoResponseDTO;
@@ -13,6 +15,12 @@ import br.com.mavidenergy.usecases.interfaces.BuscarConsulta;
 import br.com.mavidenergy.usecases.interfaces.BuscarEndereco;
 import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
 import br.com.mavidenergy.usecases.interfaces.ConverteEnderecoEmDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
@@ -36,11 +44,21 @@ public class ConsultaController {
     private final TarifaService tarifaService;
     private final ConverteEnderecoEmDTO converteEnderecoEmDTO;
     private final ConsultaRepository consultaRepository;
+    private final PessoaRepository pessoaRepository;
 
 
     @GetMapping("/{consultaId}")
-    public ResponseEntity<ConsultaResponseDTO> exibiUmaConsulta(@PathVariable String consultaId){
+    @Operation(summary = "Exibe uma consulta específica", description = "Retorna os detalhes de uma consulta específica pelo seu ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Consulta encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsultaResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Consulta não encontrada", content = @Content)
+    })
+    @Parameter(description = "ID da consulta que sera encontrada", required = true)
+    public ResponseEntity<Object> exibiUmaConsulta(@PathVariable String consultaId) {
         Consulta consulta = buscarConsulta.buscarPorId(consultaId);
+        if (consulta == null) {
+            throw new ConsultaNotFoundException("Consulta não encontrada");
+        }
 
         ConsultaResponseDTO consultaResponse = ConsultaResponseDTO.builder()
                 .bandeira(consulta.getBandeira())
@@ -51,12 +69,19 @@ public class ConsultaController {
                 .ValorSemDesconto(String.valueOf(consulta.getValorSemDesconto()))
                 .dataCriacao(consulta.getDataCriacao())
                 .build();
-
         return ResponseEntity.ok(consultaResponse);
     }
 
 
+
     @GetMapping("/pessoa/{pessoaId}")
+    @Operation(summary = "Exibe todas as consultas de uma pessoa", description = "Retorna uma lista de todas as consultas associadas a uma pessoa específica, identificada pelo seu ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Consulta encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsultaResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Consultas não encontradas", content = @Content)
+
+    })
+    @Parameter(description = "ID da pessoa que sera encontrada", required = true)
     public ResponseEntity<List<ConsultaResponseDTO>> exibiTodasAsConsultasDeUmaPessoa(@PathVariable String pessoaId) {
 
         Pessoa pessoa = buscarPessoa.buscarPorId(pessoaId);
@@ -80,6 +105,12 @@ public class ConsultaController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
+    @Operation(summary = "Gera uma nova consulta", description = "Cria uma nova consulta com base nas informações fornecidas.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Consulta criad com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsultaResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
     public ResponseEntity<ConsultaResponseDTO> gerarConsulta(@Valid @RequestBody ConsultaRequestDTO consultaRequestDTO) {
         // Define fixed values for calculations, adjust as necessary
         double tarifa = 0.60; // R$/kWh
@@ -95,7 +126,13 @@ public class ConsultaController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
 
+            Pessoa pessoa = buscarPessoa.buscarPorId(consultaRequestDTO.getPessoaId());
+            if (pessoa == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+
             List<Consulta> consultas = consultaRepository.findAll();
+            List<Pessoa> pessoas = buscarPessoa.buscarTodos();
 
             for (Consulta consulta : consultas) {
                 if (consulta.getEndereco().getEnderecoId().equals(consultaRequestDTO.getEnderecoId())) {
@@ -103,9 +140,10 @@ public class ConsultaController {
                 }
             }
 
-            Pessoa pessoa = buscarPessoa.buscarPorId(consultaRequestDTO.getPessoaId());
-            if (pessoa == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            for (Pessoa p : pessoas) {
+                if (p.getPessoaId().equals(consultaRequestDTO.getPessoaId())) {
+                    throw new IllegalArgumentException("Pessoa já possui uma consulta");
+                }
             }
 
             Map<String, Object> tarifaResultados = tarifaService.calcularTarifa(
