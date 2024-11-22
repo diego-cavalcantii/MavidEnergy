@@ -11,6 +11,7 @@ import java.util.Date;
 @Data
 @Builder
 public class ConsultaResponseDTO extends RepresentationModel<ConsultaResponseDTO> {
+    private String consultaId;
     private String bandeira;
     private double valorKwh;
     private EnderecoResponseDTO endereco;
