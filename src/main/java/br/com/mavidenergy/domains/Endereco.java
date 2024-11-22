@@ -36,4 +36,7 @@ public class Endereco {
     @JoinColumn(name = "fornecedorId")
     private Fornecedor fornecedor;
 
+    @OneToOne(mappedBy = "endereco", cascade = CascadeType.ALL)
+    private Consulta consulta;
+
 }

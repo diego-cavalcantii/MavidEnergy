@@ -1,14 +1,14 @@
 package br.com.mavidenergy.gateways.controllers;
 
+import br.com.mavidenergy.domains.Cidade;
+import br.com.mavidenergy.domains.Consulta;
 import br.com.mavidenergy.domains.Endereco;
 import br.com.mavidenergy.domains.Pessoa;
+import br.com.mavidenergy.gateways.repositories.ConsultaRepository;
 import br.com.mavidenergy.gateways.repositories.EnderecoRepository;
 import br.com.mavidenergy.gateways.requests.EnderecoRequestDTO;
 import br.com.mavidenergy.gateways.responses.EnderecoResponseDTO;
-import br.com.mavidenergy.usecases.interfaces.AdicionarEndereco;
-import br.com.mavidenergy.usecases.interfaces.BuscarEndereco;
-import br.com.mavidenergy.usecases.interfaces.BuscarPessoa;
-import br.com.mavidenergy.usecases.interfaces.ConverteEnderecoEmDTO;
+import br.com.mavidenergy.usecases.interfaces.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -28,6 +28,8 @@ public class EnderecoController {
     private final BuscarEndereco buscarEndereco;
     private final ConverteEnderecoEmDTO converteEnderecoEmDTO;
     private final EnderecoRepository enderecoRepository;
+    private final BuscarCidade buscarCidade;
+    private final ConsultaRepository consultaRepository;
 
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,9 +69,31 @@ public class EnderecoController {
 
     }
 
+    @PutMapping("/{enderecoId}")
+    public ResponseEntity<EnderecoResponseDTO> atualizarEndereco(@PathVariable String enderecoId, @RequestBody EnderecoRequestDTO enderecoRequestDTO) {
+        Endereco endereco = buscarEndereco.buscarPorId(enderecoId);
+        Cidade cidade = buscarCidade.buscarPorId(enderecoRequestDTO.getCidadeId());
+        endereco.setCep(enderecoRequestDTO.getCep());
+        endereco.setLogradouro(enderecoRequestDTO.getLogradouro());
+        endereco.setNumero(enderecoRequestDTO.getNumero());
+        endereco.setLatitude(enderecoRequestDTO.getLatitude());
+        endereco.setLongitude(enderecoRequestDTO.getLongitude());
+        endereco.setCidade(cidade);
+        enderecoRepository.save(endereco);
+        EnderecoResponseDTO enderecoResponseDTO = converteEnderecoEmDTO.executa(endereco);
+        return ResponseEntity.ok(enderecoResponseDTO);
+    }
+
+
     @DeleteMapping("/{enderecoId}")
     public ResponseEntity<String> deletarEndereco(@PathVariable String enderecoId) {
         Endereco endereco = buscarEndereco.buscarPorId(enderecoId);
+
+        List<Consulta> consultas = consultaRepository.findConsultasByEndereco(endereco);
+
+        if (!consultas.isEmpty()) {
+            consultaRepository.deleteAll(consultas);
+        }
 
         enderecoRepository.delete(endereco);
 

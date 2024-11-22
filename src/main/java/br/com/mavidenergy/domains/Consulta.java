@@ -29,6 +29,7 @@ public class Consulta {
     private Pessoa pessoa;
 
     @OneToOne
+    @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
 
