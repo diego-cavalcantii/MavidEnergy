@@ -43,6 +43,10 @@ Para ver o Design de como sera o aplicativo que ira consumir essa api basta eent
 Para mais detalhes de nossa api juntamente com documentação, pode acessar o nosso swagger:
 [Link do Swagger](http://localhost:8080/swagger-ui/index.html)
 
+---
+
+Você tambem pode acessar nossa api publica atraves do url http://191.232.170.13:8080/
+
 ## Diagramas
 
 Aqui você deve inserir os dois diagramas.
