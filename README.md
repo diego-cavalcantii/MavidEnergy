@@ -34,6 +34,14 @@ A aplicação foi desenvolvida utilizando com o MySQL como banco de dados padrã
 
 ---
 
+Para ver o Design de como sera o aplicativo que ira consumir essa api basta eentrar no link do nosso figma:
+[Link do Figma](https://www.figma.com/design/4bx75eN1M9FAVrgjqOlCOu/MavidEnergyApp?node-id=0-1&t=Rw9NU99YLYA2EN91-1)
+
+---
+
+Para mais detalhes de nossa api juntamente com documentação, pode acessar o nosso swagger:
+[Link do Swagger](http://localhost:8080/swagger-ui/index.html)
+
 ## Diagramas
 
 Aqui você deve inserir os dois diagramas.
