@@ -10,7 +10,8 @@
 
 ## Link do Vídeo
 
-[Link do vídeo](https://youtu.be/34552LLUbrE)
+[Link do vídeo Pitch](https://youtu.be/34552LLUbrE)
+[Link do vídeo Demonstrativo](https://youtu.be/YFmJ1B3Nsc8)
 
 ---
 
