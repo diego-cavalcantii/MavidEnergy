@@ -39,11 +39,7 @@ A aplicação foi desenvolvida utilizando com o MySQL como banco de dados padrã
 Aqui você deve inserir os dois diagramas.
 
 1. Diagrama de Classes:
-   ![Diagrama da Arquitetura](diagrama1)
-
-2. Diagrama Entidade Relacionamento:
-   ![Diagrama do Banco de Dados](diagrama2)
-
+   ![Diagrama da Arquitetura](documentation/diagrama.jpeg)
 ---
 
 ## Endpoints
