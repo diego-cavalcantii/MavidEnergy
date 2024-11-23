@@ -1,15 +1,12 @@
 spring:
-  #  h2:
-  #    console:
-  #      enabled: true
   datasource:
-    url: jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl
-    username: rm553483
-    password: 090104
-    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:mysql://localhost:3306/mavidenergy?useSSL=false&serverTimezone=UTC
+    username: root
+    password: sua_nova_senha
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
           ddl-auto: create
-
-
-    database-platform: org.hibernate.dialect.OracleDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
