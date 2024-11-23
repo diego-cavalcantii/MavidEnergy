@@ -4,8 +4,8 @@ spring:
   #      enabled: true
   datasource:
     url: jdbc:oracle:thin:@oracle.fiap.com.br:1521:orcl
-    username: rm553351
-    password: 120303
+    username: rm553483
+    password: 090104
     driver-class-name: oracle.jdbc.OracleDriver
   jpa:
     hibernate:

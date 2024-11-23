@@ -38,7 +38,6 @@ public class CidadeController {
     @ApiResponse(responseCode = "200", description = "Cidades encontradas", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CidadeResponseDTO.class)))
     @ApiResponse(responseCode = "404", description = "Cidades não encontradas", content = @Content)
     @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
-    @Parameter(name = "cidadeId", description = "ID da cidade para a qual os dados climáticos são buscados", required = true)
     public ResponseEntity<List<CidadeResponseDTO>> exibiTodasAsCiDades() {
         List<Cidade> cidades = buscarCidade.buscarTodos();
 
