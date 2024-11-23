@@ -1,0 +1,109 @@
+-- Principais cidades do estado de São Paulo (SP)
+INSERT INTO cidade (cidade_id, nome_cidade, nome_estado, sigla_estado, latitude, longitude) VALUES 
+(1, 'São Paulo', 'São Paulo', 'SP', -23.55052, -46.633308),
+(2, 'Campinas', 'São Paulo', 'SP', -22.90556, -47.06083),
+(3, 'São José dos Campos', 'São Paulo', 'SP', -23.1896, -45.8841),
+(4, 'Santos', 'São Paulo', 'SP', -23.96083, -46.33361),
+(5, 'Ribeirão Preto', 'São Paulo', 'SP', -21.1775, -47.81028),
+(6, 'Sorocaba', 'São Paulo', 'SP', -23.50167, -47.45806),
+(7, 'Jundiaí', 'São Paulo', 'SP', -23.18583, -46.89778),
+(8, 'Bauru', 'São Paulo', 'SP', -22.31472, -49.06056),
+(9, 'Piracicaba', 'São Paulo', 'SP', -22.72528, -47.64917),
+(10, 'Osasco', 'São Paulo', 'SP', -23.5325, -46.79167),
+(11, 'Franca', 'São Paulo', 'SP', -20.53889, -47.40083),
+(12, 'São Bernardo do Campo', 'São Paulo', 'SP', -23.69139, -46.56417),
+(13, 'Guarulhos', 'São Paulo', 'SP', -23.46278, -46.53333),
+(14, 'Diadema', 'São Paulo', 'SP', -23.68611, -46.62278),
+(15, 'Barueri', 'São Paulo', 'SP', -23.51111, -46.87694);
+
+-- Principais cidades do estado do Rio de Janeiro (RJ)
+INSERT INTO cidade (cidade_id, nome_cidade, nome_estado, sigla_estado, latitude, longitude) VALUES 
+(16, 'Rio de Janeiro', 'Rio de Janeiro', 'RJ', -22.906847, -43.172897),
+(17, 'Niterói', 'Rio de Janeiro', 'RJ', -22.88333, -43.10361),
+(18, 'Petrópolis', 'Rio de Janeiro', 'RJ', -22.505, -43.17861),
+(19, 'Volta Redonda', 'Rio de Janeiro', 'RJ', -22.52222, -44.10417),
+(20, 'Campos dos Goytacazes', 'Rio de Janeiro', 'RJ', -21.7625, -41.31806),
+(21, 'Nova Friburgo', 'Rio de Janeiro', 'RJ', -22.28611, -42.53417),
+(22, 'Angra dos Reis', 'Rio de Janeiro', 'RJ', -23.00667, -44.31806),
+(23, 'Duque de Caxias', 'Rio de Janeiro', 'RJ', -22.78556, -43.31167),
+(24, 'Cabo Frio', 'Rio de Janeiro', 'RJ', -22.88944, -42.02861),
+(25, 'Resende', 'Rio de Janeiro', 'RJ', -22.46583, -44.44667),
+(26, 'Itaboraí', 'Rio de Janeiro', 'RJ', -22.74056, -42.85944),
+(27, 'Maricá', 'Rio de Janeiro', 'RJ', -22.91944, -42.81833),
+(28, 'Teresópolis', 'Rio de Janeiro', 'RJ', -22.41611, -42.975),
+(29, 'Queimados', 'Rio de Janeiro', 'RJ', -22.71694, -43.55528),
+(30, 'Macaé', 'Rio de Janeiro', 'RJ', -22.37694, -41.785);
+
+
+
+
+-- Inserindo fornecedores
+INSERT INTO fornecedor (fornecedor_id, nome_fornecedor, cnpj, telefone, email)
+VALUES 
+('201', 'Fornecedor Solar SP 1', '00.000.000/0001-00', '(11) 1234-5678', 'contato1@fornecedoresolarsp.com'),
+('202', 'Fornecedor Solar SP 2', '00.000.000/0002-00', '(11) 9876-5432', 'contato2@fornecedoresolarsp.com'),
+('203', 'Fornecedor Solar SP 3', '00.000.000/0003-00', '(11) 5432-9876', 'contato3@fornecedoresolarsp.com'),
+('204', 'Fornecedor Solar Campinas 1', '11.111.111/0001-11', '(19) 1234-5678', 'contato1@solarcampinas.com'),
+('205', 'Fornecedor Solar Campinas 2', '11.111.111/0002-11', '(19) 8765-4321', 'contato2@solarcampinas.com'),
+('206', 'Fornecedor Solar Osasco 1', '22.222.222/0001-22', '(11) 4321-8765', 'contato1@solarsaoosasco.com'),
+('207', 'Fornecedor Solar Osasco 2', '22.222.222/0002-22', '(11) 8765-4321', 'contato2@solarsaoosasco.com'),
+('208', 'Fornecedor Solar Osasco 3', '22.222.222/0003-22', '(11) 5678-1234', 'contato3@solarsaoosasco.com'),
+('209', 'Fornecedor Solar RJ 1', '33.333.333/0001-33', '(21) 1234-5678', 'contato1@fornecedoresolarrj.com'),
+('210', 'Fornecedor Solar RJ 2', '33.333.333/0002-33', '(21) 9876-5432', 'contato2@fornecedoresolarrj.com'),
+('211', 'Fornecedor Solar RJ 3', '33.333.333/0003-33', '(21) 8765-4321', 'contato3@fornecedoresolarrj.com'),
+('212', 'Fornecedor Solar Volta Redonda', '44.444.444/0001-44', '(24) 1234-5678', 'contato@solarvolta.com'),
+('213', 'Fornecedor Solar Sorocaba 1', '55.555.555/0001-55', '(15) 1234-5678', 'contato1@solarsorocaba.com'),
+('214', 'Fornecedor Solar Sorocaba 2', '55.555.555/0002-55', '(15) 9876-5432', 'contato2@solarsorocaba.com'),
+('215', 'Fornecedor Solar Santos 1', '66.666.666/0001-66', '(13) 1234-5678', 'contato1@solarsantos.com'),
+('216', 'Fornecedor Solar Santos 2', '66.666.666/0002-66', '(13) 9876-5432', 'contato2@solarsantos.com'),
+('217', 'Fornecedor Solar Guarulhos', '77.777.777/0001-77', '(11) 3333-4444', 'contato@solarguarulhos.com'),
+('218', 'Fornecedor Solar Barueri', '88.888.888/0001-88', '(11) 5555-6666', 'contato@solarbarueri.com'),
+('219', 'Fornecedor Solar Ribeirão Preto', '99.999.999/0001-99', '(16) 4444-5555', 'contato@solarribeirao.com'),
+('220', 'Fornecedor Solar São José dos Campos', '10.000.000/0001-10', '(12) 1111-2222', 'contato@solarsaojose.com'),
+('221', 'Fornecedor Solar Niterói', '11.000.000/0001-11', '(21) 7777-8888', 'contato@solarniteroi.com'),
+('222', 'Fornecedor Solar Petrópolis', '12.000.000/0001-12', '(24) 9999-0000', 'contato@solarpetropolis.com'),
+('223', 'Fornecedor Solar Angra', '13.000.000/0001-13', '(24) 2222-3333', 'contato@solarangra.com'),
+('224', 'Fornecedor Solar Maricá', '14.000.000/0001-14', '(21) 8888-9999', 'contato@solarmarica.com'),
+('225', 'Fornecedor Solar Itaboraí', '15.000.000/0001-15', '(21) 0000-1111', 'contato@solaritaborai.com'),
+('226', 'Fornecedor Solar Franco da Rocha', '16.000.000/0001-16', '(11) 9999-8888', 'contato@solarfranco.com'),
+('227', 'Fornecedor Solar Piracicaba', '17.000.000/0001-17', '(19) 1234-4321', 'contato@solarpiracicaba.com'),
+('228', 'Fornecedor Solar Bauru', '18.000.000/0001-18', '(14) 8765-6789', 'contato@solarbauru.com'),
+('229', 'Fornecedor Solar Campos dos Goytacazes', '19.000.000/0001-19', '(22) 5555-2222', 'contato@solarcampos.com'),
+('230', 'Fornecedor Solar Queimados', '20.000.000/0001-20', '(21) 6666-7777', 'contato@solarqueimados.com');
+
+
+-- Inserindo endereços
+INSERT INTO endereco (endereco_id, cep, logradouro, numero, latitude, longitude, cidade_id, pessoa_id, fornecedor_id)
+VALUES 
+('101', '01310-100', 'Avenida Paulista', '1000', -23.56763, -46.64899, 1, NULL, '201'),
+('102', '01302-000', 'Rua da Consolação', '500', -23.55195, -46.65786,2, NULL, '202'),
+('103', '13000-000', 'Rua das Andorinhas', '200', -22.90556, -47.06083, 2, NULL, '203'),
+('104', '06000-001', 'Rua do Comércio', '300', -23.5325, -46.79167, 10, NULL, '204'),
+('105', '20000-000', 'Avenida Atlântica', '700', -22.906847, -43.172897, 16, NULL, '205'),
+('106', '27200-000', 'Rua da Prata', '600', -22.52222, -44.10417, 19, NULL, '206'),
+('107', '18000-000', 'Rua das Flores', '120', -23.50167, -47.45806, 6, NULL, '207'),
+('108', '11000-000', 'Rua dos Navegantes', '300', -23.96083, -46.33361, 4, NULL, '208'),
+('109', '07000-000', 'Avenida Guarulhos', '15', -23.46278, -46.53333, 13, NULL, '209'),
+('110', '06400-000', 'Avenida Barueri', '100', -23.51111, -46.87694, 15, NULL, '210'),
+('111', '14000-000', 'Praça da República', '50', -21.1775, -47.81028, 5, NULL, '211'),
+('112', '12200-000', 'Avenida Principal', '500', -23.1896, -45.8841, 3, NULL, '212'),
+('113', '24000-000', 'Rua Niterói Central', '90', -22.88333, -43.10361, 17, NULL, '213'),
+('114', '25600-000', 'Rua dos Nobres', '45', -22.505, -43.17861, 18, NULL, '214'),
+('115', '23900-000', 'Rua da Baía', '20', -23.00667, -44.31806, 22, NULL, '215'),
+('116', '24900-000', 'Avenida Maricá', '75', -22.91944, -42.81833, 27, NULL, '216'),
+('117', '24800-000', 'Rua Itaboraí', '150', -22.74056, -42.85944, 26, NULL, '217'),
+('118', '13200-000', 'Rua de Franco', '60', -23.305, -46.726, 7, NULL, '218'),
+('119', '13400-000', 'Avenida Piracicaba', '25', -22.72528, -47.64917, 9, NULL, '219'),
+('120', '17000-000', 'Rua de Bauru', '85', -22.31472, -49.06056, 8, NULL, '220'),
+('121', '28000-000', 'Praça de Campos', '10', -21.7625, -41.31806, 20, NULL, '221'),
+('122', '26300-000', 'Rua de Queimados', '5', -22.71694, -43.55528, 29, NULL, '222'),
+('123', '01310-300', 'Rua Augusta', '400', -23.5589, -46.640, 1, NULL, '223'),
+('124', '13001-000', 'Rua Campinas Centro', '220', -22.906, -47.064, 2, NULL, '224'),
+('125', '11010-010', 'Praia do Gonzaga', '310', -23.969, -46.333, 4, NULL, '225'),
+('126', '23000-000', 'Rua de Sepetiba', '100', -22.991, -43.631, 16, NULL, '226'),
+('127', '17001-010', 'Rua do Comércio', '90', -22.315, -49.064, 8, NULL, '227'),
+('128', '14010-010', 'Rua São José', '60', -21.177, -47.811, 5, NULL, '228'),
+('129', '28010-020', 'Praça da Saudade', '30', -21.762, -41.318, 20, NULL, '229'),
+('130', '26310-030', 'Avenida Brasil', '15', -22.716, -43.556, 29, NULL, '230');
+
+
