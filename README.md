@@ -1,19 +1,5 @@
 # API - MavidEnergy
 
-# Integrantes do Grupo
-
-- **RM553351 - Diego Cavalcanti** - Responsável pela criação da aplicação
-- **RM553352 - Mateus Galeazi** - Responsável pela documentação
-- **RM553483 - Vitor de Melo** - Responsável pelos diagramas e o banco
-
----
-
-## Link do Vídeo
-
-[Link do vídeo Pitch](https://youtu.be/34552LLUbrE)
-[Link do vídeo Demonstrativo](https://youtu.be/YFmJ1B3Nsc8)
-
----
 
 ## Instruções de Como Rodar a Aplicação
 A aplicação foi desenvolvida utilizando com o MySQL como banco de dados padrão. Para rodar a aplicação, siga os seguintes passos:
